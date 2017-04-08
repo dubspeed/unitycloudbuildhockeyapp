@@ -144,10 +144,12 @@ function handleSentToBuilder(data) {
 function handleSuccess(data) {
     var parsed = url.parse( data.links.download_primary.href );
     var filename = path.basename( parsed.pathname );
-
-    console.log(JSON.stringify(data));
-    
-    downloadBinary( data.links.download_primary.href, filename );
+    var upload_options = {
+        tags : data.build,
+        commit_sha : data.lastBuiltRevision
+    };
+         
+    downloadBinary( data.links.download_primary.href, filename, upload_options);
     createShareLink(data);
 }
 
@@ -236,7 +238,7 @@ function handleCanceled(data) {
     console.log('Build canceled by ' + canceledBy + ': ' + data.finished);
 }
 
-function downloadBinary( binaryURL, filename ){
+function downloadBinary( binaryURL, filename, upload_options ){
     
     console.log("Download binary");
     console.log("   " + binaryURL);
@@ -267,7 +269,7 @@ function downloadBinary( binaryURL, filename ){
 
         writeStream.on('finish', () => {
             // console.log("2. downloadBinary: file finished");          
-            uploadToHockeyApp( filename );
+            uploadToHockeyApp( filename, upload_options );
             uploadToPlayStore( filename );
         });
     }).on('error', (e) => {
@@ -279,7 +281,7 @@ function uploadToPlayStore( filename ) {
 
 }
 
-function uploadToHockeyApp( filename ){
+function uploadToHockeyApp( filename, upload_options ){
     console.log("Uploading to HockeyApp");
 
     var readable = fs.createReadStream( filename );
@@ -301,6 +303,10 @@ function uploadToHockeyApp( filename ){
     form.append('notes_type', 0);
     form.append('notify', 0);
     form.append('ipa', readable);
+    if (upload_options) {
+        form.append('tags', upload_options.tags);
+        form.append('commit_sha', upload_options.commit_sha);
+    }
 
     var req = form.submit({
       host: HOCKEY_APP_HOST,
