@@ -145,7 +145,7 @@ function handleSuccess(data) {
     var parsed = url.parse( data.links.download_primary.href );
     var filename = path.basename( parsed.pathname );
     var upload_options = {
-        tags : data.build,
+        build : data.build,
         commit_sha : data.lastBuiltRevision
     };
          
@@ -304,7 +304,8 @@ function uploadToHockeyApp( filename, upload_options ){
     form.append('notify', 0);
     form.append('ipa', readable);
     if (upload_options) {
-        form.append('tags', upload_options.tags);
+        // tags is not what you think they are - hockeyapp restrict downloads based on tags on users
+        //form.append('tags', upload_options.tags);
         form.append('commit_sha', upload_options.commit_sha);
     }
 
