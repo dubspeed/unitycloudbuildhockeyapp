@@ -145,6 +145,8 @@ function handleSuccess(data) {
     var parsed = url.parse( data.links.download_primary.href );
     var filename = path.basename( parsed.pathname );
 
+    console.log(JSON.stringify(data));
+    
     downloadBinary( data.links.download_primary.href, filename );
     createShareLink(data);
 }
