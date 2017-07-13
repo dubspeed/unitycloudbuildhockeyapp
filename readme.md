@@ -38,11 +38,13 @@ Note; This is an initial release which is functional, but needs refactoring.
 - You don't need to setup the app on HockeyApp, if you upload the binary it will automatically create a new app instance.
 - Configure HockeyApp to automatically notify users after the binary has uploaded. See the 'notify' variable within the 'uploadToHockeyApp()' function. [HockeyApp API](https://support.hockeyapp.net/kb/api/api-versions#upload-version)
 
+
 ## Todo
   - Clean up and comment codebase.
   - Populate HockeyApp release notes with Git commit message.
   - Add logging feature to show builds processed and deployed.
   - Integrate job system to manage/prioritise jobs and view jobs in progress.
+
 
 ## Licenses
 
